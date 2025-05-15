@@ -1,13 +1,17 @@
 # Pymortem: Advanced Python Debugging
 
+<div align="center">
+
 ![PyPI](https://img.shields.io/pypi/v/pymortem)
 ![Python Versions](https://img.shields.io/pypi/pyversions/pymortem)
 ![License](https://img.shields.io/pypi/l/pymortem?logo=auto)
 [![Codecov](https://codecov.io/gh/nsarang/pymortem/branch/main/graph/badge.svg)](https://codecov.io/gh/nsarang/pymortem)
 
+</div>
+
 Pymortem is a post-mortem debugging tool that lets you inspect and manipulate execution contexts after exceptions occur. Unlike traditional debuggers that require a separate interactive shell, pymortem gives you direct access to all variables and frames in the exception stack, making it valuable in Jupyter notebooks and interactive environments.
 
-> This package evolved from an [educational blog post about post-mortem debugging](https://nimasarang.com/blog/2025-01-30-post-mortem/). What started as a teaching tool became a full-featured debugging library due to its practical applications and user feedback.
+> This package evolved from an educational [blog post](https://nimasarang.com/blog/2025-01-30-post-mortem/) on post-mortem debugging techniques. What began as educational code examples has been refined into a practical debugging library.
 
 ## Installation
 
