@@ -26,3 +26,9 @@ repos:
       - id: codespell
         types_or: [python, rst, markdown, cython, c]
         additional_dependencies: [tomli]
+
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.14.0
+    hooks:
+      - id: yamlfmt
+        args: ["-formatter", "retain_line_breaks=true,scan_folded_as_literal=true"]
