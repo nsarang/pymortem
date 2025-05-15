@@ -1,0 +1,47 @@
+import re
+
+from setuptools import find_packages, setup
+
+with open("pymortem/__init__.py", encoding="utf-8") as fh:
+    content = fh.read()
+    version = re.search(r"__version__\s*=\s*([\"\'])(.+?)\1", content).group(2)
+
+with open("README.md", encoding="utf-8") as fh:
+    long_description = fh.read()
+
+with open("requirements/app.txt", encoding="utf-8") as fh:
+    app_dependencies = fh.read().splitlines()
+
+setup(
+    name="pymortem",
+    version=version,
+    packages=find_packages(),
+    install_requires=app_dependencies,
+    python_requires=">=3.7",
+    author="Nima Sarang",
+    author_email="contact@nimasarang.com",
+    description="Post-mortem debugging tools for Python",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/nsarang/pymortem",
+    project_urls={
+        "Homepage": "https://github.com/nsarang/pymortem",
+        "Issues": "https://github.com/nsarang/pymortem/issues",
+        "Documentation": "https://github.com/nsarang/pymortem#readme",
+    },
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Topic :: Software Development :: Debuggers",
+    ],
+    keywords="debugging, post-mortem, traceback, exception, development",
+)
