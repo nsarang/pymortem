@@ -2,9 +2,11 @@
 
 ![PyPI](https://img.shields.io/pypi/v/pymortem)
 ![Python Versions](https://img.shields.io/pypi/pyversions/pymortem)
-![License](https://img.shields.io/pypi/l/pymortem)
+![License](https://img.shields.io/pypi/l/pymortem?logo=auto)
 
-A bit of Python black magic that lets you efficiently inspect and manipulate execution contexts after crashes, aka, post-mortem debugging.
+Pymortem is a post-mortem debugging tool that lets you inspect and manipulate execution contexts after exceptions occur. Unlike traditional debuggers that require a separate interactive shell, pymortem gives you direct access to all variables and frames in the exception stack, making it valuable in Jupyter notebooks and interactive environments.
+
+> This package evolved from an [educational blog post about post-mortem debugging](https://nimasarang.com/blog/2025-01-30-post-mortem/). What started as a teaching tool became a full-featured debugging library due to its practical applications and user feedback.
 
 ## Installation
 
@@ -14,57 +16,134 @@ pip install pymortem
 
 ## Features
 
-- Improved exception tracebacks with more context
-- Inspect local and global variables at each frame in the exception stack
-- Handle chained exceptions elegantly
-- Execute code within the context of any frame in the stack
-- Works in both scripts and interactive environments (including Jupyter notebooks)
+- **Enhanced Tracebacks**: Rich, visual traceback output showing code context around errors with line numbers and error indicators
+- **Frame Inspection**: Directly examine variables at any level in the call stack without navigating through a separate command interface
+- **Code Execution in Context**: Run arbitrary code in the context of any stack frame without restarting your program
+- **Chained Exception Support**: Clear visualization of exception chains, showing both "raised from" and "during handling" relationships
+- **No Special Setup**: Works with standard Python without requiring breakpoints or special execution modes
 
 ## Usage
 
-### Basic Exception Analysis
+### Examining an Exception after it Occurs
+
+```python
+# In one cell where an error happens:
+def foo():
+    x = 10
+    output = x / 0
+    return output
+
+foo()
+```
+
+```python
+# In the next cell, examine the exception:
+import pymortem
+
+# Get enhanced traceback and frame information
+traceback_msg, frames = pymortem.extract_from_exception()
+
+# Display the improved traceback
+print(traceback_msg)
+```
+
+### Inspecting Variables in the Error Context
+
+```python
+# After running the above cells
+# Let's examine the local variables in different frames
+
+# The frame where the error occurred
+print("Locals in error frame:", frames[-1]["locals"])
+
+# Check global variables too
+print("Some globals:", {k: v for k, v in list(frames[-1]["globals"].items())[:5]})
+```
+
+### Executing Code in a Frame's Context
+
+```python
+import pymortem
+import sys
+
+# Get the most recent exception
+exception = pymortem.retrieve_the_last_exception() # Store the exception
+_, frames = pymortem.extract_from_exception(exception)
+
+# Choose a frame to work with (e.g., frames[1] for a specific frame)
+work_frame = frames[-1]
+
+# Execute code in that frame's context
+pymortem.execute(
+    """
+    # You can access all variables that existed when the error occurred
+    print("Available variables:", list(locals().keys()))
+
+    # Test potential fixes without rerunning the entire notebook
+    try:
+        # Try a fix for a ZeroDivisionError
+        denominator = 2  # Was 0 before
+        fixed_result = x / denominator
+        print(f"Fix worked! Result = {fixed_result}")
+    except Exception as e:
+        print(f"Fix didn't work: {e}")
+    """,
+    work_frame
+)
+```
+
+### Handling Chained Exceptions
+
+```python
+# Create a chained exception scenario
+try:
+    try:
+        x = {"key": "value"}
+        result = x["missing_key"]  # Will raise KeyError
+    except KeyError:
+        result = 10 + "0"  # Will raise ValueError
+except Exception as e:
+    chain_exception = e
+
+# Examine the exception chain
+traceback_msg, all_frames = pymortem.extract_from_exception(chain_exception)
+print(traceback_msg)
+print("")
+
+# Frames are arranged in chronological order, with the first exception first
+original_error_frame = all_frames[0]  # Frame from the KeyError
+raised_from_frame = all_frames[-1]    # Frame from the ValueError
+
+print(f"First exception type: {type(chain_exception.__cause__)}")
+print(f"Second exception type: {type(chain_exception)}")
+```
+
+## Why Use Pymortem?
+
+Post-mortem debugging in Python traditionally requires using tools like `pdb.pm()` or `%debug` in IPython, which launch a separate command interface with its own syntax and navigation model. Pymortem takes a different approach:
+
+1. **Direct Context Access**: Instead of a separate debugging shell, access frame data directly in your current Python environment
+2. **Better Visualization**: See more context around exceptions with cleaner, more informative tracebacks
+3. **Natural Code Execution**: Run diagnostic code directly in frame contexts using standard Python syntax
+4. **Stays in Flow**: Particularly valuable in notebooks where switching to a separate debugging interface breaks your workflow
+5. **Handles Complexity**: Elegantly deals with nested and chained exceptions that can be confusing in traditional debuggers
+
+### Debugging Complex Exception Chains
 
 ```python
 import pymortem
 
 try:
-    # Your code that might raise an exception
-    result = 1 / 0
+    # Your code with nested exceptions
+    pass
 except Exception as e:
-    # Get a better traceback with surrounding context
-    traceback_message, frame_info = pymortem.extract_from_exception(e)
+    traceback_message, frames = pymortem.extract_from_exception(e)
     print(traceback_message)
 
-    # Inspect variables at a specific frame
-    print(frame_info[0]["locals"])  # Local variables at the first frame
+    # Access frames from any point in the exception chain
+    first_exception_frame = frames[0]  # First frame in the first exception
+    outer_exception_frame = frames[-1]  # Frame from the outermost exception
 ```
-
-### Executing Code in Exception Context
-
-```python
-import pymortem
-
-# After an exception occurs
-exception = sys.last_value  # Get the last exception
-_, frame_info = pymortem.extract_from_exception(exception)
-
-# Execute code in the context of a specific frame
-pymortem.execute("""
-print("Variables in this context:", locals().keys())
-# Fix or inspect variables
-result = some_variable * 2
-print("Modified result:", result)
-""", frame_info[1])  # Using frame 1 as an example
-```
-
-## Why Use Pymortem?
-
-Traditional debugging with `pdb` can be cumbersome, especially in larger projects or when using Jupyter notebooks. Pymortem gives you:
-
-1. Better traceback visualization with surrounding code context
-2. Direct access to variables at each step of the stack without navigating through a separate UI
-3. Ability to execute arbitrary code within any frame's context
-4. Support for both nested exceptions and IPython/Jupyter environments
 
 ## License
 

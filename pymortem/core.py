@@ -157,7 +157,7 @@ def retrieve_the_last_exception() -> Exception:
 
 
 def extract_from_exception(
-    exception: Exception, context_lines: int = 5, max_indent: int = 8
+    exception: Exception = None, context_lines: int = 5, max_indent: int = 8
 ) -> Tuple[str, List[Dict]]:
     """
     Extract and format all chained exceptions with complete traceback information.
@@ -168,7 +168,8 @@ def extract_from_exception(
     Parameters
     ----------
     exception : Exception
-        The exception to process. Uses sys.last_value if None.
+        The exception to process. If None, it will retrieve the last exception
+        by calling `pymortem.retrieve_the_last_exception`.
     context_lines : int, default 5
         Number of source code lines to include around each error line.
     max_indent : int, default 8
