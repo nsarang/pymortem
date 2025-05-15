@@ -133,23 +133,6 @@ Post-mortem debugging in Python traditionally requires using tools like `pdb.pm(
 4. **Stays in Flow**: Particularly valuable in notebooks where switching to a separate debugging interface breaks your workflow
 5. **Handles Complexity**: Elegantly deals with nested and chained exceptions that can be confusing in traditional debuggers
 
-### Debugging Complex Exception Chains
-
-```python
-import pymortem
-
-try:
-    # Your code with nested exceptions
-    pass
-except Exception as e:
-    traceback_message, frames = pymortem.extract_from_exception(e)
-    print(traceback_message)
-
-    # Access frames from any point in the exception chain
-    first_exception_frame = frames[0]  # First frame in the first exception
-    outer_exception_frame = frames[-1]  # Frame from the outermost exception
-```
-
 ## License
 
 MIT
