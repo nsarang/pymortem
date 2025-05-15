@@ -3,6 +3,7 @@
 ![PyPI](https://img.shields.io/pypi/v/pymortem)
 ![Python Versions](https://img.shields.io/pypi/pyversions/pymortem)
 ![License](https://img.shields.io/pypi/l/pymortem?logo=auto)
+[![Codecov](https://codecov.io/gh/nsarang/pymortem/branch/main/graph/badge.svg)](https://codecov.io/gh/nsarang/pymortem)
 
 Pymortem is a post-mortem debugging tool that lets you inspect and manipulate execution contexts after exceptions occur. Unlike traditional debuggers that require a separate interactive shell, pymortem gives you direct access to all variables and frames in the exception stack, making it valuable in Jupyter notebooks and interactive environments.
 
