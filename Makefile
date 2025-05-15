@@ -49,10 +49,9 @@ build: clean
 	$(ACTIVATE_CMD) && \
 	$(PYTHON) setup.py sdist bdist_wheel
 
-check-dist: clean
+check-dist: build
 	$(ACTIVATE_CMD) && \
-	$(PYTHON) -m pip install build twine && \
-	$(PYTHON) -m build && \
+	$(PYTHON) -m pip install twine && \
 	$(PYTHON) -m twine check dist/*
 
 publish-test: check-dist
