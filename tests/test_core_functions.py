@@ -69,8 +69,8 @@ class TestProcessSingleException:
                     if True:
                         if True:
                             # This is deeply indented
-                            x = 10  # noqa: F841
-                            return 1 / 0
+                            x = 10
+                            return x / 0
 
             return inner_function()
 
@@ -78,12 +78,12 @@ class TestProcessSingleException:
             deeply_nested_function()
         except Exception as e:
             # Process with unlimited indentation
-            _, info_default = core.process_single_exception(e)
+            msg1, info_default = core.process_single_exception(e)
             # Process with limited indentation (4 spaces max)
-            _, info_limited = core.process_single_exception(e, max_indent=4)
+            msg2, info_limited = core.process_single_exception(e, max_indent=4)
 
             # Find the frame containing the error line in each case
-            def find_error_frame_and_line(frames, text="1/0"):
+            def find_error_frame_and_line(frames, text="x / 0"):
                 for frame in frames:
                     for line in frame["metadata"]["lines"]:
                         if text in line:

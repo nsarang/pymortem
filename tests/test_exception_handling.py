@@ -78,6 +78,58 @@ class TestGetChainedExceptions:
             assert len(chain) == 1
             assert isinstance(chain[0][0], RuntimeError)
 
+    def test_explicit_context_suppression(self):
+        """Test with an exception using 'raise from None' to explicitly suppress context"""
+        try:
+            try:
+                raise ValueError("Suppressed explicitly")
+            except ValueError:
+                # This explicitly breaks the chain using 'from None'
+                raise RuntimeError("Main error with no context") from None
+        except Exception as e:
+            chain = list(core.get_chained_exceptions(e))
+
+            # Should only have one exception since context is explicitly suppressed with 'from None'
+            assert len(chain) == 1
+            assert isinstance(chain[0][0], RuntimeError)
+            assert str(chain[0][0]) == "Main error with no context"
+
+            # Verify both __context__ and __cause__ are None or appropriately handled
+            assert chain[0][0].__cause__ is None
+            # Even though __context__ might contain the ValueError, it should be suppressed
+            assert chain[0][0].__suppress_context__ is True
+
+    def test_multi_level_explicit_chaining(self):
+        """Test with multiple levels of explicitly chained exceptions"""
+        try:
+            try:
+                try:
+                    raise ValueError("Original error")
+                except ValueError as e1:
+                    raise KeyError("Intermediate error") from e1
+            except KeyError as e2:
+                raise RuntimeError("Final error") from e2
+        except Exception as e:
+            chain = list(core.get_chained_exceptions(e))
+
+            # Should have three exceptions in the chain
+            assert len(chain) == 3
+
+            # Check exception types and reasons in order
+            assert isinstance(chain[0][0], ValueError)
+            assert chain[0][1] == "__cause__"
+
+            assert isinstance(chain[1][0], KeyError)
+            assert chain[1][1] == "__cause__"
+
+            assert isinstance(chain[2][0], RuntimeError)
+            assert chain[2][1] is None
+
+            # Verify the chaining relationships
+            final_exception = chain[2][0]
+            assert isinstance(final_exception.__cause__, KeyError)
+            assert isinstance(final_exception.__cause__.__cause__, ValueError)
+
 
 class TestExtractFromException:
     def test_extract_simple_exception(self):
