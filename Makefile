@@ -47,11 +47,12 @@ test: pre-commit
 
 build: clean
 	$(ACTIVATE_CMD) && \
+	$(PIP) install wheel && \
 	$(PYTHON) setup.py sdist bdist_wheel
 
 check-dist: build
 	$(ACTIVATE_CMD) && \
-	$(PYTHON) -m pip install twine && \
+	$(PIP) install twine && \
 	$(PYTHON) -m twine check dist/*
 
 publish-test: check-dist
