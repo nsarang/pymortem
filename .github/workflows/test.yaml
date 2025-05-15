@@ -34,3 +34,10 @@ jobs:
 
     - name: Build and check distribution
       run: make check-dist
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        flags: python-${{ matrix.python-version }}
+        fail_ci_if_error: false
