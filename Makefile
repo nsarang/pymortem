@@ -57,7 +57,7 @@ check-dist: build
 
 publish-test: check-dist
 	$(ACTIVATE_CMD) && \
-	$(PYTHON) -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+	$(PYTHON) -m twine upload --verbose --repository-url https://test.pypi.org/legacy/ dist/*
 
 publish: check-dist
 	$(ACTIVATE_CMD) && \
