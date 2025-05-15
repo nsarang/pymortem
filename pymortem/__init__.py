@@ -6,7 +6,7 @@ This package provides utilities for post-mortem debugging in Python,
 allowing inspection and manipulation of execution contexts after crashes.
 """
 
-__version__ = "1.0.0rc2"
+__version__ = "1.0.0rc3"
 
 from .core import (
     execute,
