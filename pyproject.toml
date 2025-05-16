@@ -269,13 +269,3 @@ markers = [
 #   "single_cpu: tests that should run on a single cpu only",
 #   "slow: mark a test as slow",
 ]
-
-
-[tool.codespell]
-ignore-words-list = [
-  "MAPE",
-  "GARD",
-  "gard",
-  "THA",
-  "NAM",
-]
