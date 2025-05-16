@@ -2,8 +2,8 @@
 
 <div align="center">
 
-![PyPI](https://img.shields.io/pypi/v/pymortem)
-![Python Versions](https://img.shields.io/pypi/pyversions/pymortem)
+[![PyPI](https://img.shields.io/pypi/v/pymortem?logoSize=auto)](https://pypi.org/project/pymortem/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/pymortem?logoSize=auto)](https://pypi.org/project/pymortem/)
 ![License](https://img.shields.io/pypi/l/pymortem?logo=auto)
 [![Codecov](https://codecov.io/gh/nsarang/pymortem/branch/main/graph/badge.svg)](https://codecov.io/gh/nsarang/pymortem)
 
